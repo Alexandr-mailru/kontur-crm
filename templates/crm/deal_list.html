@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Сделки — Контур CRM{% endblock %}
+{% block content %}
+<header class="page-head row">
+  <div><h1>Сделки</h1></div>
+  <a href="{% url 'crm:deal_create' %}" class="btn">+ Сделка</a>
+</header>
+<div class="tabs">
+  <a href="{% url 'crm:deal_list' %}" class="{% if not stage %}is-active{% endif %}">Все</a>
+  {% for key, label in stages %}
+  <a href="?stage={{ key }}" class="{% if stage == key %}is-active{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Сделка</th><th>Клиент</th><th>Сумма</th><th>Этап</th><th>Действие</th></tr></thead>
+    <tbody>
+      {% for deal in deals %}
+      <tr>
+        <td>{{ deal.title }}</td>
+        <td>{{ deal.client.company }}</td>
+        <td>{{ deal.amount|floatformat:0 }} ₽</td>
+        <td><span class="badge badge-{{ deal.stage }}">{{ deal.stage_label }}</span></td>
+        <td>
+          <form method="post" action="{% url 'crm:deal_stage' deal.pk %}" class="inline-form">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+            <select name="stage" class="input input-sm" onchange="this.form.submit()">
+              {% for key, label in stages %}
+              <option value="{{ key }}" {% if deal.stage == key %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="muted">Сделок нет</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

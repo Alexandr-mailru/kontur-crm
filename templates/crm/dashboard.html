@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Дашборд — Контур CRM{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>Дашборд</h1>
+  <p class="muted">Обзор воронки и задач</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><span class="stat__n">{{ client_count }}</span><span class="stat__l">Клиентов</span></div>
+  <div class="stat"><span class="stat__n">{{ open_deals }}</span><span class="stat__l">Сделок в работе</span></div>
+  <div class="stat"><span class="stat__n">{{ won_sum|floatformat:0 }} ₽</span><span class="stat__l">Успешно</span></div>
+</div>
+
+<section class="panel">
+  <h2>Воронка продаж</h2>
+  <ul class="pipeline-list">
+    {% for label, count in pipeline_items %}
+    <li><span>{{ label }}</span><strong>{{ count }}</strong></li>
+    {% endfor %}
+  </ul>
+</section>
+
+<div class="grid-2">
+  <section class="panel">
+    <div class="panel-head"><h2>Последние сделки</h2><a href="{% url 'crm:deal_create' %}" class="btn btn-sm">+ Сделка</a></div>
+    <ul class="list">
+      {% for deal in recent_deals %}
+      <li>
+        <strong>{{ deal.title }}</strong>
+        <span class="muted">{{ deal.client.company }} · {{ deal.amount|floatformat:0 }} ₽</span>
+        <span class="badge badge-{{ deal.stage }}">{{ deal.stage_label }}</span>
+      </li>
+      {% empty %}
+      <li class="muted">Нет сделок — <a href="{% url 'crm:deal_create' %}">создать</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  <section class="panel">
+    <div class="panel-head"><h2>Задачи</h2><a href="{% url 'crm:task_create' %}" class="btn btn-sm">+ Задача</a></div>
+    <ul class="list">
+      {% for task in tasks %}
+      <li class="task-row">
+        <form method="post" action="{% url 'crm:task_toggle' task.pk %}" class="inline-form">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{% url 'crm:dashboard' %}" />
+          <button type="submit" class="check-btn" title="Выполнить">○</button>
+        </form>
+        <span>{{ task.title }}</span>
+        {% if task.due_date %}<span class="muted">до {{ task.due_date|date:"d.m" }}</span>{% endif %}
+      </li>
+      {% empty %}
+      <li class="muted">Нет открытых задач</li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+{% endblock %}

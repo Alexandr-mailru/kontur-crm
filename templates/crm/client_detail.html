@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}{{ client.company }} — Контур CRM{% endblock %}
+{% block content %}
+<header class="page-head row">
+  <div>
+    <p class="eyebrow"><a href="{% url 'crm:client_list' %}">← Клиенты</a></p>
+    <h1>{{ client.company }}</h1>
+    <p class="muted">{{ client.contact_name }}{% if client.phone %} · {{ client.phone }}{% endif %}{% if client.email %} · {{ client.email }}{% endif %}</p>
+  </div>
+  <a href="{% url 'crm:client_edit' client.pk %}" class="btn btn-outline">Изменить</a>
+</header>
+{% if client.notes %}<p class="panel">{{ client.notes }}</p>{% endif %}
+<div class="grid-2">
+  <section class="panel">
+    <h2>Сделки</h2>
+    <ul class="list">
+      {% for deal in deals %}
+      <li><strong>{{ deal.title }}</strong> — {{ deal.amount|floatformat:0 }} ₽ <span class="badge badge-{{ deal.stage }}">{{ deal.stage_label }}</span></li>
+      {% empty %}<li class="muted">Нет сделок</li>{% endfor %}
+    </ul>
+  </section>
+  <section class="panel">
+    <h2>Задачи</h2>
+    <ul class="list">
+      {% for task in tasks %}
+      <li>{{ task.title }}{% if task.due_date %} <span class="muted">до {{ task.due_date|date:"d.m.Y" }}</span>{% endif %}</li>
+      {% empty %}<li class="muted">Нет задач</li>{% endfor %}
+    </ul>
+  </section>
+</div>
+{% endblock %}

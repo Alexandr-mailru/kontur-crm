@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Задачи — Контур CRM{% endblock %}
+{% block content %}
+<header class="page-head row">
+  <div><h1>Задачи</h1></div>
+  <a href="{% url 'crm:task_create' %}" class="btn">+ Задача</a>
+</header>
+<p><a href="?done={% if show_done %}0{% else %}1{% endif %}">{% if show_done %}Скрыть выполненные{% else %}Показать выполненные{% endif %}</a></p>
+<ul class="list list-tasks">
+  {% for task in tasks %}
+  <li class="task-row{% if task.is_done %} is-done{% endif %}">
+    <form method="post" action="{% url 'crm:task_toggle' task.pk %}" class="inline-form">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+      <button type="submit" class="check-btn">{% if task.is_done %}✓{% else %}○{% endif %}</button>
+    </form>
+    <span>{{ task.title }}</span>
+    {% if task.client %}<span class="muted">{{ task.client.company }}</span>{% endif %}
+    {% if task.due_date %}<span class="muted">{{ task.due_date|date:"d.m.Y" }}</span>{% endif %}
+  </li>
+  {% empty %}
+  <li class="muted">Задач нет</li>
+  {% endfor %}
+</ul>
+{% endblock %}

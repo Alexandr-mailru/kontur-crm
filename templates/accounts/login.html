@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Вход — Контур CRM{% endblock %}
+{% block auth_content %}
+<div class="auth-card">
+  <h1>Контур<span>CRM</span></h1>
+  <p class="muted">Демо CRM для портфолио</p>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="field"><label>{{ field.label }}</label>{{ field }}{{ field.errors }}</div>
+    {% endfor %}
+    <button type="submit" class="btn btn-block">Войти</button>
+  </form>
+  <p class="auth-foot">Нет аккаунта? <a href="{% url 'accounts:register' %}">Регистрация</a></p>
+  <p class="auth-foot small"><a href="{% url 'crm:privacy' %}">Политика конфиденциальности</a></p>
+</div>
+{% endblock %}

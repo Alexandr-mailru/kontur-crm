@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{% block title %}Контур CRM{% endblock %}</title>
+  {% load static %}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/crm.css' %}" />
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <div class="layout">
+    <aside class="sidebar">
+      <a class="brand" href="{% url 'crm:dashboard' %}">Контур<span>CRM</span></a>
+      <nav class="side-nav">
+        <a href="{% url 'crm:dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}is-active{% endif %}">Дашборд</a>
+        <a href="{% url 'crm:client_list' %}" class="{% if 'client' in request.resolver_match.url_name %}is-active{% endif %}">Клиенты</a>
+        <a href="{% url 'crm:deal_list' %}" class="{% if 'deal' in request.resolver_match.url_name %}is-active{% endif %}">Сделки</a>
+        <a href="{% url 'crm:task_list' %}" class="{% if 'task' in request.resolver_match.url_name %}is-active{% endif %}">Задачи</a>
+      </nav>
+      <div class="sidebar-foot">
+        <span class="user">{{ user.username }}</span>
+        <form method="post" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="linkish">Выйти</button>
+        </form>
+      </div>
+    </aside>
+    <div class="main-wrap">
+      {% if messages %}
+      <div class="flash-wrap">
+        {% for message in messages %}
+        <div class="flash flash-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      <main class="main">{% block content %}{% endblock %}</main>
+      <footer class="foot">
+        <a href="{% url 'crm:about' %}">О проекте</a>
+        <a href="{% url 'crm:privacy' %}">Конфиденциальность</a>
+        <a href="{% url 'crm:copyright' %}">Авторские права</a>
+      </footer>
+    </div>
+  </div>
+  {% else %}
+  <main class="auth-shell">{% block auth_content %}{% endblock %}</main>
+  {% endif %}
+
+  <div class="cookie" data-cookie hidden>
+    <p>Технические cookie (<code>sessionid</code>, <code>csrftoken</code>) — для входа и защиты форм. <a href="{% url 'crm:privacy' %}">Политика</a>.</p>
+    <button type="button" data-cookie-ok>Понятно</button>
+  </div>
+  <script src="{% static 'js/cookie.js' %}" defer></script>
+</body>
+</html>

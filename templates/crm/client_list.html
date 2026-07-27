@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Клиенты — Контур CRM{% endblock %}
+{% block content %}
+<header class="page-head row">
+  <div><h1>Клиенты</h1><p class="muted">Контакты и компании</p></div>
+  <a href="{% url 'crm:client_create' %}" class="btn">+ Клиент</a>
+</header>
+<form class="search-bar" method="get">
+  <input class="input" type="search" name="q" value="{{ q }}" placeholder="Поиск по компании или контакту…" />
+</form>
+<div class="table-wrap">
+  <table class="table">
+    <thead><tr><th>Компания</th><th>Контакт</th><th>Email</th><th>Основание ПДн</th><th></th></tr></thead>
+    <tbody>
+      {% for client in clients %}
+      <tr>
+        <td><a href="{% url 'crm:client_detail' client.pk %}">{{ client.company }}</a></td>
+        <td>{{ client.contact_name }}</td>
+        <td>{{ client.email|default:"—" }}</td>
+        <td>{{ client.get_data_processing_basis_display }}</td>
+        <td><a href="{% url 'crm:client_edit' client.pk %}">Изменить</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="muted">Клиентов нет. <a href="{% url 'crm:client_create' %}">Добавить</a></td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
