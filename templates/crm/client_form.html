@@ -8,10 +8,15 @@
 <form method="post" class="form-card">
   {% csrf_token %}
   {% for field in form %}
-  <div class="field{% if field.name == 'pdn_basis_confirm' %} field-check{% endif %}">
-    {% if field.name == 'pdn_basis_confirm' %}{{ field }}{% else %}<label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% endif %}
-    {{ field.errors }}
-  </div>
+    {% if field.field.widget.input_type == 'checkbox' %}
+      {% include 'includes/checkbox_field.html' %}
+    {% else %}
+    <div class="field">
+      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {{ field.errors }}
+    </div>
+    {% endif %}
   {% endfor %}
   <button type="submit" class="btn">Сохранить</button>
 </form>

@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% block guest_main_class %}guest-page{% endblock %}
 {% block title %}Авторские права — Контур CRM{% endblock %}
 {% block content %}
-<article class="legal">
-  <p class="eyebrow"><a href="{% url 'crm:dashboard' %}">← В CRM</a></p>
+<article class="legal panel-legal">
+  <p class="eyebrow"><a href="{% if user.is_authenticated %}{% url 'crm:dashboard' %}{% else %}{% url 'accounts:login' %}{% endif %}">← Назад</a></p>
   <h1>Авторские права и источники</h1>
   <p class="muted">Соответствие законодательству РФ (ч. IV ГК РФ об авторском праве).</p>
 

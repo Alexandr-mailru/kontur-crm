@@ -9,6 +9,7 @@ from django.views.decorators.http import require_POST
 
 from .forms import ClientEditForm, ClientForm, DealForm, TaskForm
 from .models import Client, Deal, Task
+from .utils import safe_redirect
 
 
 def _user_clients(user):
@@ -88,8 +89,10 @@ def client_edit(request, pk):
 def deal_list(request):
     stage = request.GET.get('stage', '')
     deals = _user_deals(request.user)
-    if stage:
+    if stage and stage in dict(Deal.STAGE_CHOICES):
         deals = deals.filter(stage=stage)
+    elif stage:
+        stage = ''
     return render(request, 'crm/deal_list.html', {
         'deals': deals,
         'stage': stage,
@@ -119,7 +122,7 @@ def deal_stage(request, pk):
         deal.stage = stage
         deal.save(update_fields=['stage', 'updated_at'])
         messages.success(request, f'Этап: {deal.stage_label}')
-    return redirect(request.POST.get('next', 'crm:deal_list'))
+    return safe_redirect(request, 'crm:deal_list')
 
 
 @login_required
@@ -151,11 +154,15 @@ def task_toggle(request, pk):
     task = get_object_or_404(Task.objects.filter(owner=request.user), pk=pk)
     task.is_done = not task.is_done
     task.save(update_fields=['is_done'])
-    return redirect(request.POST.get('next', 'crm:task_list'))
+    return safe_redirect(request, 'crm:task_list')
 
 
 def privacy(request):
     return render(request, 'legal/privacy.html')
+
+
+def terms(request):
+    return render(request, 'legal/terms.html')
 
 
 def copyright_info(request):

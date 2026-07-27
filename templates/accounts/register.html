@@ -1,16 +1,23 @@
 {% extends 'base.html' %}
 {% block title %}Регистрация — Контур CRM{% endblock %}
-{% block auth_content %}
+{% block content %}
 <div class="auth-card">
   <h1>Регистрация</h1>
+  <p class="muted">Создайте аккаунт менеджера для демо-CRM</p>
+
   <form method="post">
     {% csrf_token %}
     {% for field in form %}
-    <div class="field{% if field.name == 'pdn_consent' %} field-check{% endif %}">
-      {% if field.name == 'pdn_consent' %}{{ field }}{% else %}<label>{{ field.label }}</label>{{ field }}{% endif %}
-      {{ field.errors }}
-      {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
-    </div>
+      {% if field.field.widget.input_type == 'checkbox' %}
+        {% include 'includes/checkbox_field.html' %}
+      {% else %}
+      <div class="field">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {{ field.errors }}
+        {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+      </div>
+      {% endif %}
     {% endfor %}
     <button type="submit" class="btn btn-block">Создать аккаунт</button>
   </form>

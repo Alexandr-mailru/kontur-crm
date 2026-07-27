@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% block guest_main_class %}guest-page{% endblock %}
 {% block title %}О проекте — Контур CRM{% endblock %}
 {% block content %}
-<article class="legal">
-  <p class="eyebrow"><a href="{% url 'crm:dashboard' %}">← В CRM</a></p>
+<article class="legal panel-legal">
+  <p class="eyebrow"><a href="{% if user.is_authenticated %}{% url 'crm:dashboard' %}{% else %}{% url 'accounts:login' %}{% endif %}">← Назад</a></p>
   <h1>О проекте</h1>
   <p>«Контур CRM» — демо-система для портфолио: клиенты, сделки, задачи, воронка продаж.</p>
 
@@ -13,7 +14,7 @@
     <li>задачи с дедлайнами;</li>
     <li>дашборд со статистикой;</li>
     <li>регистрация с согласием на обработку ПДн (ФЗ‑152);</li>
-    <li>cookie-баннер, политика конфиденциальности и авторские права.</li>
+    <li>пользовательское соглашение, cookie-баннер, политика конфиденциальности и авторские права.</li>
   </ul>
 
   <h2>Стек</h2>

@@ -17,6 +17,7 @@ urlpatterns = [
     path('tasks/new/', views.task_create, name='task_create'),
     path('tasks/<int:pk>/toggle/', views.task_toggle, name='task_toggle'),
     path('privacy/', views.privacy, name='privacy'),
+    path('terms/', views.terms, name='terms'),
     path('copyright/', views.copyright_info, name='copyright'),
     path('about/', views.about, name='about'),
 ]

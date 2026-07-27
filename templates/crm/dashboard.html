@@ -7,16 +7,20 @@
 </header>
 
 <div class="stats">
-  <div class="stat"><span class="stat__n">{{ client_count }}</span><span class="stat__l">Клиентов</span></div>
-  <div class="stat"><span class="stat__n">{{ open_deals }}</span><span class="stat__l">Сделок в работе</span></div>
-  <div class="stat"><span class="stat__n">{{ won_sum|floatformat:0 }} ₽</span><span class="stat__l">Успешно</span></div>
+  <div class="stat stat--clients"><span class="stat__n">{{ client_count }}</span><span class="stat__l">Клиентов</span></div>
+  <div class="stat stat--deals"><span class="stat__n">{{ open_deals }}</span><span class="stat__l">Сделок в работе</span></div>
+  <div class="stat stat--won"><span class="stat__n">{{ won_sum|floatformat:0 }} ₽</span><span class="stat__l">Успешно</span></div>
 </div>
 
-<section class="panel">
+<section class="panel panel--pipeline">
   <h2>Воронка продаж</h2>
   <ul class="pipeline-list">
     {% for label, count in pipeline_items %}
-    <li><span>{{ label }}</span><strong>{{ count }}</strong></li>
+    <li class="pipeline-item" style="--fill: {{ count|default:0 }}">
+      <span class="pipeline-label">{{ label }}</span>
+      <strong>{{ count }}</strong>
+      <span class="pipeline-bar" aria-hidden="true"></span>
+    </li>
     {% endfor %}
   </ul>
 </section>

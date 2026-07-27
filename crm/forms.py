@@ -1,8 +1,7 @@
 from django import forms
-from django.urls import reverse_lazy
+from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-
 from .models import Client, Deal, Task
 
 
@@ -29,7 +28,7 @@ class ClientForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        privacy = reverse_lazy('crm:privacy')
+        privacy = reverse('crm:privacy')
         self.fields['pdn_basis_confirm'].label = mark_safe(
             format_html(
                 'Подтверждаю наличие правового основания для обработки персональных данных '

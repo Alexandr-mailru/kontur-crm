@@ -1,0 +1,8 @@
+<div class="field field-check">
+  <label class="check-label" for="{{ field.id_for_label }}">
+    {{ field }}
+    <span class="check-label__text">{{ field.label }}</span>
+  </label>
+  {{ field.errors }}
+  {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+</div>
