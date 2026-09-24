@@ -1,0 +1,19 @@
+{
+  "services": {
+    "kontur-crm": {
+      "entrypoint": "config/wsgi.py",
+      "framework": "django",
+      "root": ".",
+      "buildCommand": "python -m pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "type": "service",
+        "service": "kontur-crm"
+      }
+    }
+  ]
+}
