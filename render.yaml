@@ -1,0 +1,16 @@
+﻿services:
+  - type: web
+    name: kontur-crm
+    runtime: python
+    plan: free
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_ALLOWED_HOSTS
+        value: localhost,127.0.0.1,.onrender.com
